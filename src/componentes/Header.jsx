@@ -1,17 +1,34 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 import '../assets/css/text.css'
+import FiltroCategorias from './FiltroCategorias'
+import { useEffect, useState } from "react";
+const API = ('https://dummyjson.com/products/categories')
 
 const Header = () => {
+  const [datos, setDatos] = useState([])
+  const getDatos = async () =>{
+      try {
+        const response = await fetch(API);
+        const data = await response.json();
+        setDatos(data.products);
+      } catch (error) {
+        console.error(error)
+      }
+    };
+    useEffect(()=>{
+    getDatos();
+    },[]);
   return (
     <>
-        <div className="navbar bg-base-300">
+        <div className="navbar bg-slate-900 text-white">
           <div className="navbar navbar-start">
             <Link to={"/"} className="btn btn-ghost text-xl">Añisbaba.com</Link>
             <a className='btn btn-ghost'>Enviar a <p className='text-xl'>Venezuela</p></a>
 
           </div>
           <div className="navbar-center border-2 border-black bg-neutral-content">
+          
           <div className="dropdown ">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle ">
                 Todos
@@ -19,12 +36,19 @@ const Header = () => {
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2">
-                <li><Link to={"/Movil"}>Moviles</Link></li>
-                <li><Link to={"/Laptop"}>Laptop</Link></li>
-                <li><Link to={"/Deporte"}>Deporte</Link></li>
+                className="menu menu-sm dropdown-content  rounded-box z-[1] mt-3 w-52 p-2 shadow bg-neutral-950">
+                
+                 {datos && datos.map((item) =>
+                  <FiltroCategorias
+                    key={item.id}
+                    item={item}
+                  />
+                
+                )}
+                  
               </ul>
             </div>
+          
             <div className='navbar-center'>
             <input type="text" placeholder="Search" className="input w-24 md:w-full" />
             </div>
@@ -49,7 +73,7 @@ const Header = () => {
           </div>
           <div className="dropdown dropdown-hover ">
                 <div tabIndex={0} role="button" className="btn m-1">Idioma</div>
-                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-neutral-content">
+                <ul tabIndex={0} className="dropdown-content menu rounded-box z-[1] w-52 p-2 shadow bg-neutral-950">
                     <li><a>Español</a></li>
                     <li><a>Ingles</a></li>
                 </ul>
@@ -92,30 +116,7 @@ const Header = () => {
         </div>
 
 
-        <div className='navbar bg-base-200'>
-            <div className="drawer">
-              <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-              <div className="drawer-content">
-                {/* Page content here */}
-                <label htmlFor="my-drawer" className="btn drawer-button">Todo</label>
-              </div>
-              <div className="drawer-side">
-                <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-                  <div className='tituloheader'>Hola, identificate</div>
-                  <br />
-                  <li><a>Sidebar Item 1</a></li>
-                  <li><a>Sidebar Item 2</a></li>
-                  <li><a>Sidebar item 3</a></li>
-                  <li><a>Sidebar item 4</a></li>
-                  <li><a>Sidebar item 5</a></li>
-                  <li><a>Sidebar item 6</a></li>
-                  <li><a>Sidebar item 7</a></li>
-                  <li><a>Sidebar item 8</a></li>
-                </ul>
-              </div>
-            </div>
-        </div>
+        
 
 </>
   )
